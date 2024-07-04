@@ -26,6 +26,9 @@ public class User {
 	private List<Account> accounts = new ArrayList<>();
 	private Address address;
 	
+	
+	// test 
+	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getUserId() {
 		return userId;
