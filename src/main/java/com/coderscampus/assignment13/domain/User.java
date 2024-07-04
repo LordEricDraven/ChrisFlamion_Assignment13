@@ -27,7 +27,6 @@ public class User {
 	private Address address;
 	
 	
-	// test 
 	
 	@Id @GeneratedValue(strategy = GenerationType.IDENTITY)
 	public Long getUserId() {
