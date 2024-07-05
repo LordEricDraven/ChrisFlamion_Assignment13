@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.coderscampus.assignment13.domain.Account;
+import com.coderscampus.assignment13.domain.Address;
 import com.coderscampus.assignment13.domain.User;
 import com.coderscampus.assignment13.repository.AccountRepository;
+import com.coderscampus.assignment13.repository.AddressRepository;
 import com.coderscampus.assignment13.repository.UserRepository;
 
 @Service
@@ -20,6 +24,8 @@ public class UserService {
 	private UserRepository userRepo;
 	@Autowired
 	private AccountRepository accountRepo;
+	@Autowired
+	private AddressRepository addressRepo;
 	
 	public List<User> findByUsername(String username) {
 		return userRepo.findByUsername(username);
@@ -49,7 +55,7 @@ public class UserService {
 		Optional<User> userOpt = userRepo.findById(userId);
 		return userOpt.orElse(new User());
 	}
-
+	
 	public User saveUser(User user) {
 		if (user.getUserId() == null) {
 			Account checking = new Account();
@@ -64,10 +70,31 @@ public class UserService {
 			accountRepo.save(checking);
 			accountRepo.save(savings);
 		}
+		Address address = user.getAddress();
+		if (address != null) {
+			addressRepo.save(address);
+		}
 		return userRepo.save(user);
 	}
 
 	public void delete(Long userId) {
 		userRepo.deleteById(userId);
+	}
+	
+	@Transactional
+	public User createNewAccount(Long userId, Account account) {
+		User user = findById(userId);
+		if (user != null) {
+			account.setAccountId(null);
+			accountRepo.save(account);
+			System.out.println("Account Saved: " + account.getAccountId());
+			
+			account.getUsers().add(user);
+			user.getAccounts().add(account);
+			userRepo.save(user);
+			System.out.println("User Saved: " + user.getUserId());
+			return user;
+		}
+		return null;
 	}
 }

@@ -27,6 +27,7 @@ public class Account {
 	public void setAccountId(Long accountId) {
 		this.accountId = accountId;
 	}
+	
 	@Column(length = 100)
 	public String getAccountName() {
 		return accountName;
@@ -34,6 +35,7 @@ public class Account {
 	public void setAccountName(String accountName) {
 		this.accountName = accountName;
 	}
+	
 	@OneToMany(mappedBy = "account")
 	public List<Transaction> getTransactions() {
 		return transactions;
@@ -41,6 +43,7 @@ public class Account {
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}
+	
 	@ManyToMany(mappedBy = "accounts")
 	public List<User> getUsers() {
 		return users;

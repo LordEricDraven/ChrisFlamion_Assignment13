@@ -39,6 +39,7 @@ public class Transaction {
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
+	
 	@Column(length = 1)
 	public String getType() {
 		return type;
@@ -46,6 +47,7 @@ public class Transaction {
 	public void setType(String type) {
 		this.type = type;
 	}
+	
 	@ManyToOne
 	@JoinColumn(name="account_id")
 	public Account getAccount() {
