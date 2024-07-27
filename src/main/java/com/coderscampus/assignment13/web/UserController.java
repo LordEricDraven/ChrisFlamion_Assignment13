@@ -1,7 +1,10 @@
 package com.coderscampus.assignment13.web;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -41,11 +44,13 @@ public class UserController {
 	}
 	
 	@GetMapping("/users")
-	public String getAllUsers (ModelMap model) {
+	public String getAllUsers (ModelMap model, HttpServletResponse response) throws IOException {
 		Set<User> users = userService.findAll();
 		model.put("users", users);
 		if (users.size() == 1) {
-			model.put("user", users.iterator().next());
+			User user = users.iterator().next();
+			response.sendRedirect("/users/" + user.getUserId());
+			return null;
 		}
 		return "users";
 	}
@@ -66,7 +71,7 @@ public class UserController {
 		User existingUser = userService.findById(userId);
 		if(existingUser != null) {
 			existingUser.setUsername(user.getUsername());
-			if(user.getPassword() != null && user.getPassword().isEmpty()) {
+			if(user.getPassword() != null && !user.getPassword().isEmpty()) {
 				existingUser.setPassword(user.getPassword());
 			}
 			existingUser.setName(user.getName());
